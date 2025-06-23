@@ -1,7 +1,7 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { insertPurchaseSchema, insertExpenseSchema, insertActivitySchema, insertInvoiceSchema, insertCoopSchema } from "@shared/schema";
+import { insertPurchaseSchema, insertExpenseSchema, insertActivitySchema, insertInvoiceSchema, insertCoopSchema, insertMortalitySchema } from "@shared/schema";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Coops routes
@@ -134,6 +134,26 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json({ message: "Invoice deleted successfully" });
     } catch (error: any) {
       res.status(400).json({ message: error.message || "Failed to delete invoice" });
+    }
+  });
+
+  // Mortalities routes
+  app.get("/api/mortalities", async (req, res) => {
+    try {
+      const mortalities = await storage.getMortalities();
+      res.json(mortalities);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch mortalities" });
+    }
+  });
+
+  app.post("/api/mortalities", async (req, res) => {
+    try {
+      const mortalityData = insertMortalitySchema.parse(req.body);
+      const mortality = await storage.createMortality(mortalityData);
+      res.json(mortality);
+    } catch (error: any) {
+      res.status(400).json({ message: error.message || "Failed to create mortality record" });
     }
   });
 

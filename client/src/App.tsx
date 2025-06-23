@@ -13,6 +13,7 @@ import Purchases from "./pages/Purchases";
 import Expenses from "./pages/Expenses";
 import Activities from "./pages/Activities";
 import Sales from "./pages/Sales";
+import Mortality from "./pages/Mortality";
 import NotFound from "@/pages/not-found";
 
 function AppContent() {
@@ -46,6 +47,8 @@ function AppContent() {
         return <Activities />;
       case 'sales':
         return <Sales />;
+      case 'mortality':
+        return <Mortality />;
       default:
         return <Dashboard />;
     }

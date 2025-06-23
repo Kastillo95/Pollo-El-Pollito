@@ -27,10 +27,10 @@ export default function Sales() {
     defaultValues: {
       clientName: '',
       clientPhone: '',
-      quantity: 0,
-      unitPrice: '0',
-      pricePerPound: '0',
       concept: '',
+      quantity: 0,
+      pounds: '0',
+      pricePerPound: '0',
       status: 'paid',
     },
   });
@@ -125,12 +125,12 @@ export default function Sales() {
 
   const generatePreview = () => {
     const formData = form.getValues();
-    if (formData.clientName && formData.quantity && formData.unitPrice) {
+    if (formData.clientName && formData.quantity && formData.pounds && formData.pricePerPound) {
       const mockInvoice: Invoice = {
         id: 0,
         invoiceNumber: 'PREV-0001',
         ...formData,
-        total: (Number(formData.unitPrice) * formData.quantity).toString(),
+        total: (Number(formData.pounds) * Number(formData.pricePerPound)).toString(),
         date: new Date(),
       };
       setPreviewInvoice(mockInvoice);
@@ -230,6 +230,20 @@ export default function Sales() {
 
                   <FormField
                     control={form.control}
+                    name="concept"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Concepto</FormLabel>
+                        <FormControl>
+                          <Input placeholder="Descripción del producto" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
                     name="quantity"
                     render={({ field }) => (
                       <FormItem>
@@ -247,59 +261,51 @@ export default function Sales() {
                     )}
                   />
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <FormField
-                      control={form.control}
-                      name="unitPrice"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Precio por Unidad</FormLabel>
-                          <FormControl>
-                            <Input
-                              type="number"
-                              step="0.01"
-                              placeholder="0.00"
-                              {...field}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-
-                    <FormField
-                      control={form.control}
-                      name="pricePerPound"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Precio por Libra</FormLabel>
-                          <FormControl>
-                            <Input
-                              type="number"
-                              step="0.01"
-                              placeholder="0.00"
-                              {...field}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-
                   <FormField
                     control={form.control}
-                    name="concept"
+                    name="pounds"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Concepto</FormLabel>
+                        <FormLabel>Libras</FormLabel>
                         <FormControl>
-                          <Input placeholder="Descripción del producto" {...field} />
+                          <Input
+                            type="number"
+                            step="0.01"
+                            placeholder="0.00"
+                            {...field}
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
                     )}
                   />
+
+                  <FormField
+                    control={form.control}
+                    name="pricePerPound"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Precio por Libra</FormLabel>
+                        <FormControl>
+                          <Input
+                            type="number"
+                            step="0.01"
+                            placeholder="0.00"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <div className="bg-gray-50 p-3 rounded-lg">
+                    <p className="text-sm text-gray-600">Total: {
+                      form.watch('pounds') && form.watch('pricePerPound') 
+                        ? formatCurrency(Number(form.watch('pounds')) * Number(form.watch('pricePerPound')))
+                        : formatCurrency(0)
+                    }</p>
+                  </div>
 
                   <div className="flex space-x-4">
                     <Button

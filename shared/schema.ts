@@ -43,12 +43,21 @@ export const invoices = pgTable("invoices", {
   invoiceNumber: text("invoice_number").notNull().unique(),
   clientName: text("client_name").notNull(),
   clientPhone: text("client_phone"),
-  quantity: integer("quantity").notNull(),
-  unitPrice: decimal("unit_price", { precision: 10, scale: 2 }).notNull(),
-  pricePerPound: decimal("price_per_pound", { precision: 10, scale: 2 }).notNull(),
   concept: text("concept").notNull(),
+  quantity: integer("quantity").notNull(),
+  pounds: decimal("pounds", { precision: 10, scale: 2 }).notNull(),
+  pricePerPound: decimal("price_per_pound", { precision: 10, scale: 2 }).notNull(),
   total: decimal("total", { precision: 10, scale: 2 }).notNull(),
   status: text("status").notNull().default("paid"), // paid, pending, cancelled
+  date: timestamp("date").notNull().defaultNow(),
+});
+
+export const mortalities = pgTable("mortalities", {
+  id: serial("id").primaryKey(),
+  coopNumber: integer("coop_number").notNull(),
+  quantity: integer("quantity").notNull(),
+  cause: text("cause").notNull(), // enfermedad, accidente, natural, desconocida
+  description: text("description"),
   date: timestamp("date").notNull().defaultNow(),
 });
 
@@ -78,6 +87,11 @@ export const insertInvoiceSchema = createInsertSchema(invoices).omit({
   date: true,
 });
 
+export const insertMortalitySchema = createInsertSchema(mortalities).omit({
+  id: true,
+  date: true,
+});
+
 // Types
 export type Coop = typeof coops.$inferSelect;
 export type InsertCoop = z.infer<typeof insertCoopSchema>;
@@ -93,3 +107,6 @@ export type InsertActivity = z.infer<typeof insertActivitySchema>;
 
 export type Invoice = typeof invoices.$inferSelect;
 export type InsertInvoice = z.infer<typeof insertInvoiceSchema>;
+
+export type Mortality = typeof mortalities.$inferSelect;
+export type InsertMortality = z.infer<typeof insertMortalitySchema>;

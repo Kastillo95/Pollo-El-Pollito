@@ -3,7 +3,8 @@ import {
   type Purchase, type InsertPurchase,
   type Expense, type InsertExpense,
   type Activity, type InsertActivity,
-  type Invoice, type InsertInvoice
+  type Invoice, type InsertInvoice,
+  type Mortality, type InsertMortality
 } from "@shared/schema";
 
 export interface IStorage {
@@ -30,6 +31,10 @@ export interface IStorage {
   createInvoice(invoice: InsertInvoice): Promise<Invoice>;
   updateInvoice(id: number, invoice: Partial<InsertInvoice>): Promise<Invoice>;
   deleteInvoice(id: number): Promise<void>;
+  
+  // Mortalities
+  getMortalities(): Promise<Mortality[]>;
+  createMortality(mortality: InsertMortality): Promise<Mortality>;
 }
 
 export class MemStorage implements IStorage {
@@ -38,12 +43,14 @@ export class MemStorage implements IStorage {
   private expenses: Map<number, Expense>;
   private activities: Map<number, Activity>;
   private invoices: Map<number, Invoice>;
+  private mortalities: Map<number, Mortality>;
   private currentCoopId: number;
   private currentPurchaseId: number;
   private currentExpenseId: number;
   private currentActivityId: number;
   private currentInvoiceId: number;
   private currentInvoiceNumber: number;
+  private currentMortalityId: number;
 
   constructor() {
     this.coops = new Map();
@@ -51,12 +58,14 @@ export class MemStorage implements IStorage {
     this.expenses = new Map();
     this.activities = new Map();
     this.invoices = new Map();
+    this.mortalities = new Map();
     this.currentCoopId = 1;
     this.currentPurchaseId = 1;
     this.currentExpenseId = 1;
     this.currentActivityId = 1;
     this.currentInvoiceId = 1;
     this.currentInvoiceNumber = 1;
+    this.currentMortalityId = 1;
     
     // Initialize 7 coops with sample data
     this.initializeCoops();
@@ -114,6 +123,7 @@ export class MemStorage implements IStorage {
     const purchase: Purchase = {
       id: this.currentPurchaseId++,
       ...purchaseData,
+      notes: purchaseData.notes || null,
       date: new Date(),
     };
     this.purchases.set(purchase.id, purchase);
@@ -180,6 +190,10 @@ export class MemStorage implements IStorage {
     const activity: Activity = {
       id: this.currentActivityId++,
       ...activityData,
+      description: activityData.description || null,
+      coopNumber: activityData.coopNumber || null,
+      completed: activityData.completed || false,
+      recurring: activityData.recurring || false,
     };
     this.activities.set(activity.id, activity);
     return activity;
@@ -204,15 +218,26 @@ export class MemStorage implements IStorage {
   }
 
   async createInvoice(invoiceData: InsertInvoice): Promise<Invoice> {
-    const total = Number(invoiceData.unitPrice) * invoiceData.quantity;
+    const total = Number(invoiceData.pricePerPound) * Number(invoiceData.pounds);
     const invoice: Invoice = {
       id: this.currentInvoiceId++,
       invoiceNumber: `Fact-${String(this.currentInvoiceNumber++).padStart(4, '0')}`,
       ...invoiceData,
+      clientPhone: invoiceData.clientPhone || null,
+      status: invoiceData.status || 'paid',
       total: total.toString(),
       date: new Date(),
     };
     this.invoices.set(invoice.id, invoice);
+    
+    // Reduce chickens from coop 1
+    const coop1 = Array.from(this.coops.values()).find(c => c.number === 1);
+    if (coop1 && coop1.quantity >= invoiceData.quantity) {
+      await this.updateCoop(coop1.id, {
+        quantity: coop1.quantity - invoiceData.quantity
+      });
+    }
+    
     return invoice;
   }
 
@@ -229,6 +254,33 @@ export class MemStorage implements IStorage {
 
   async deleteInvoice(id: number): Promise<void> {
     this.invoices.delete(id);
+  }
+
+  // Mortalities
+  async getMortalities(): Promise<Mortality[]> {
+    return Array.from(this.mortalities.values()).sort((a, b) => 
+      new Date(b.date).getTime() - new Date(a.date).getTime()
+    );
+  }
+
+  async createMortality(mortalityData: InsertMortality): Promise<Mortality> {
+    const mortality: Mortality = {
+      id: this.currentMortalityId++,
+      ...mortalityData,
+      description: mortalityData.description || null,
+      date: new Date(),
+    };
+    this.mortalities.set(mortality.id, mortality);
+
+    // Reduce chickens from specified coop
+    const coop = Array.from(this.coops.values()).find(c => c.number === mortalityData.coopNumber);
+    if (coop && coop.quantity >= mortalityData.quantity) {
+      await this.updateCoop(coop.id, {
+        quantity: coop.quantity - mortalityData.quantity
+      });
+    }
+
+    return mortality;
   }
 }
 

@@ -1,4 +1,4 @@
-import { Home, Warehouse, ShoppingCart, Receipt, CheckSquare, ScanBarcode } from "lucide-react";
+import { Home, Warehouse, ShoppingCart, Receipt, CheckSquare, ScanBarcode, AlertTriangle } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface NavigationProps {
@@ -13,6 +13,7 @@ const tabs = [
   { id: 'expenses', label: 'Gastos', icon: Receipt },
   { id: 'activities', label: 'Actividades', icon: CheckSquare },
   { id: 'sales', label: 'Ventas', icon: ScanBarcode },
+  { id: 'mortality', label: 'Mortalidad', icon: AlertTriangle },
 ];
 
 export default function Navigation({ currentTab, onTabChange }: NavigationProps) {

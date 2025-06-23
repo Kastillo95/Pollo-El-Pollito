@@ -15,7 +15,7 @@ export default function Header({ notificationCount }: HeaderProps) {
             <img 
               src={logoPath} 
               alt="Pollo Fresco El Pollito" 
-              className="w-10 h-10 mr-3"
+              className="w-10 h-10 mr-3 logo-circular"
             />
             <div>
               <h1 className="text-xl font-bold text-[var(--pollo-brown)]">

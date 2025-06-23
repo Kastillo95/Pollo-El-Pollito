@@ -26,10 +26,10 @@ export default function InvoicePreview({ invoice }: InvoicePreviewProps) {
       invoiceNumber: invoice.invoiceNumber,
       clientName: invoice.clientName,
       clientPhone: invoice.clientPhone || '',
-      quantity: invoice.quantity,
-      unitPrice: Number(invoice.unitPrice),
-      pricePerPound: Number(invoice.pricePerPound),
       concept: invoice.concept,
+      quantity: invoice.quantity,
+      pounds: Number(invoice.pounds),
+      pricePerPound: Number(invoice.pricePerPound),
       total: Number(invoice.total),
       date: new Date(invoice.date),
     });
@@ -134,20 +134,18 @@ export default function InvoicePreview({ invoice }: InvoicePreviewProps) {
             <table className="w-full border-collapse border border-gray-300">
               <thead>
                 <tr className="bg-gray-50">
-                  <th className="border border-gray-300 px-4 py-2 text-left">Cantidad</th>
                   <th className="border border-gray-300 px-4 py-2 text-left">Concepto</th>
-                  <th className="border border-gray-300 px-4 py-2 text-left">P. Unitario</th>
+                  <th className="border border-gray-300 px-4 py-2 text-left">Cantidad</th>
+                  <th className="border border-gray-300 px-4 py-2 text-left">Libras</th>
                   <th className="border border-gray-300 px-4 py-2 text-left">P. Libra</th>
                   <th className="border border-gray-300 px-4 py-2 text-left">Total</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td className="border border-gray-300 px-4 py-2">{invoice.quantity}</td>
                   <td className="border border-gray-300 px-4 py-2">{invoice.concept}</td>
-                  <td className="border border-gray-300 px-4 py-2">
-                    {formatCurrency(Number(invoice.unitPrice))}
-                  </td>
+                  <td className="border border-gray-300 px-4 py-2">{invoice.quantity} pollitos</td>
+                  <td className="border border-gray-300 px-4 py-2">{Number(invoice.pounds).toFixed(2)} lbs</td>
                   <td className="border border-gray-300 px-4 py-2">
                     {formatCurrency(Number(invoice.pricePerPound))}
                   </td>
@@ -168,7 +166,8 @@ export default function InvoicePreview({ invoice }: InvoicePreviewProps) {
 
           {/* Footer */}
           <div className="text-center text-sm text-[var(--pollo-brown)] border-t pt-4">
-            <p className="font-semibold">¡Gracias por tu compra!</p>
+            <p className="font-semibold text-lg">¡Gracias por tu compra!</p>
+            <p className="text-xs mt-1 text-gray-600">Su confianza es nuestro compromiso</p>
           </div>
         </div>
 

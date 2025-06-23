@@ -2,10 +2,10 @@ export interface InvoiceData {
   invoiceNumber: string;
   clientName: string;
   clientPhone?: string;
-  quantity: number;
-  unitPrice: number;
-  pricePerPound: number;
   concept: string;
+  quantity: number;
+  pounds: number;
+  pricePerPound: number;
   total: number;
   date: Date;
 }
@@ -19,9 +19,9 @@ export function generateWhatsAppMessage(invoice: InvoiceData): string {
 📅 *Fecha:* ${invoice.date.toLocaleDateString('es-HN')}
 
 📦 *Detalle:*
-- Cantidad: ${invoice.quantity} pollitos
 - Concepto: ${invoice.concept}
-- Precio unitario: L. ${invoice.unitPrice.toFixed(2)}
+- Cantidad: ${invoice.quantity} pollitos
+- Libras: ${invoice.pounds.toFixed(2)} lbs
 - Precio por libra: L. ${invoice.pricePerPound.toFixed(2)}
 
 💰 *Total: L. ${invoice.total.toFixed(2)}*

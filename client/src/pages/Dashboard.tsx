@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent } from "@/components/ui/card";
 import { Home, Bird, DollarSign } from "lucide-react";
-import CoopCard from "@/components/CoopCard";
+import DashboardCoopCard from "@/components/DashboardCoopCard";
 import { formatCurrency } from "@/lib/utils";
 import type { Coop } from "@shared/schema";
 
@@ -12,9 +12,9 @@ export default function Dashboard() {
 
   const totalChickens = coops?.reduce((sum, coop) => sum + coop.quantity, 0) || 0;
 
-  const handleEditCoop = (coop: Coop) => {
-    // TODO: Implement edit functionality
-    console.log('Edit coop:', coop);
+  const handleViewCoop = (coop: Coop) => {
+    // View-only functionality for dashboard
+    console.log('View coop:', coop);
   };
 
   if (isLoading) {
@@ -95,7 +95,7 @@ export default function Dashboard() {
       {/* Chicken Coops Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         {coops?.map((coop) => (
-          <CoopCard key={coop.id} coop={coop} onEdit={handleEditCoop} />
+          <DashboardCoopCard key={coop.id} coop={coop} onView={handleViewCoop} />
         ))}
       </div>
     </div>

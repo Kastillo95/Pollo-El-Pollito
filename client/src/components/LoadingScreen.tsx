@@ -8,7 +8,7 @@ export default function LoadingScreen() {
           <img 
             src={logoPath} 
             alt="Pollo Fresco El Pollito" 
-            className="w-32 h-32 mx-auto"
+            className="w-32 h-32 mx-auto logo-circular"
           />
         </div>
         <div className="text-white">
