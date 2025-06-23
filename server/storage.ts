@@ -207,14 +207,7 @@ export class DatabaseStorage implements IStorage {
       })
       .returning();
     
-    // Reduce chickens from coop 1
-    const allCoops = await this.getCoops();
-    const coop1 = allCoops.find(c => c.number === 1);
-    if (coop1 && coop1.quantity >= invoiceData.quantity) {
-      await this.updateCoop(coop1.id, {
-        quantity: coop1.quantity - invoiceData.quantity
-      });
-    }
+    // No longer reduce inventory from sales - handled by mortality tracking
     
     return invoice;
   }

@@ -15,11 +15,11 @@ export default function DashboardCoopCard({ coop, onView }: DashboardCoopCardPro
   const age = calculateAge(coop.entryDate);
   const ageCategory = getAgeCategory(age);
   
-  // Broiler chicken images
+  // Broiler chicken images - only chickens
   const imageUrls = [
-    "https://images.unsplash.com/photo-1581833971358-2c8b550f87b3?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=200",
-    "https://images.unsplash.com/photo-1612817288484-6f916006741a?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=200",
-    "https://images.unsplash.com/photo-1559827260-dc66d52bef19?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=200"
+    "https://images.unsplash.com/photo-1548550023-2bdb3c5beed7?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=200",
+    "https://images.unsplash.com/photo-1616404891008-3cb00f2b0321?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=200",
+    "https://images.unsplash.com/photo-1518899139663-b6b8b0b3a1ad?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=200"
   ];
   
   const imageUrl = imageUrls[(coop.number - 1) % imageUrls.length];

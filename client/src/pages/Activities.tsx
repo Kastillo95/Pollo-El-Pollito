@@ -28,7 +28,7 @@ export default function Activities() {
       type: '',
       coopNumber: undefined,
       description: '',
-      scheduledDate: new Date(),
+      scheduledDate: new Date().toISOString().slice(0, 16),
       completed: false,
       recurring: false,
     },
@@ -57,7 +57,11 @@ export default function Activities() {
   });
 
   const onSubmit = (data: InsertActivity) => {
-    createActivityMutation.mutate(data);
+    const submitData = {
+      ...data,
+      scheduledDate: new Date(data.scheduledDate)
+    };
+    createActivityMutation.mutate(submitData);
   };
 
   const getActivityIcon = (type: string) => {
@@ -190,8 +194,8 @@ export default function Activities() {
                         <Input
                           type="datetime-local"
                           {...field}
-                          value={field.value ? new Date(field.value).toISOString().slice(0, 16) : ''}
-                          onChange={(e) => field.onChange(new Date(e.target.value))}
+                          value={field.value || ''}
+                          onChange={(e) => field.onChange(e.target.value)}
                         />
                       </FormControl>
                       <FormMessage />
