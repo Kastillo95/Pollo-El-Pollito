@@ -47,7 +47,7 @@ export default function Inventory() {
       ...prev,
       [coopId]: {
         ...prev[coopId],
-        [field]: value,
+        [field]: field === 'quantity' ? (value === '' ? 0 : Number(value)) : value,
       }
     }));
   };
@@ -59,7 +59,10 @@ export default function Inventory() {
     const updateData: Partial<InsertCoop> = {};
     
     if (changes.quantity !== undefined && changes.quantity !== coop.quantity) {
-      updateData.quantity = Number(changes.quantity);
+      const quantity = Number(changes.quantity);
+      if (!isNaN(quantity) && quantity >= 0) {
+        updateData.quantity = quantity;
+      }
     }
     
     if (changes.date && changes.date !== coop.entryDate.toISOString().split('T')[0]) {
@@ -68,6 +71,12 @@ export default function Inventory() {
 
     if (Object.keys(updateData).length > 0) {
       updateCoopMutation.mutate({ id: coop.id, data: updateData });
+    } else {
+      toast({
+        title: "Sin cambios",
+        description: "No hay cambios válidos para guardar",
+        variant: "destructive",
+      });
     }
   };
 
@@ -147,9 +156,10 @@ export default function Inventory() {
                     <td className="px-6 py-4 whitespace-nowrap">
                       <Input
                         type="number"
-                        value={getInputValue(coop, 'quantity')}
-                        onChange={(e) => handleInputChange(coop.id, 'quantity', parseInt(e.target.value))}
+                        value={getInputValue(coop, 'quantity') || ''}
+                        onChange={(e) => handleInputChange(coop.id, 'quantity', e.target.value)}
                         className="w-20"
+                        min="0"
                       />
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">

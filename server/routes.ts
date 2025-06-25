@@ -17,7 +17,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.put("/api/coops/:id", async (req, res) => {
     try {
       const id = parseInt(req.params.id);
-      const updateData = insertCoopSchema.parse(req.body);
+      // Create a schema for updates that allows partial data
+      const updateSchema = insertCoopSchema.deepPartial();
+      const updateData = updateSchema.parse(req.body);
       const updatedCoop = await storage.updateCoop(id, updateData);
       res.json(updatedCoop);
     } catch (error: any) {
