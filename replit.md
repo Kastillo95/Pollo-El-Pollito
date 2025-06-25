@@ -102,7 +102,8 @@ The system uses PostgreSQL with the following main entities:
 ## Changelog
 ```
 Changelog:
-- June 25, 2025. Initial setup
+- December 25, 2024. Initial setup and migration
+- December 25, 2024. Fixed inventory update validation and improved invoice preview
 ```
 
 ## User Preferences

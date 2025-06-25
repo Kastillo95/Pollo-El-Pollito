@@ -125,15 +125,28 @@ export default function Sales() {
 
   const generatePreview = () => {
     const formData = form.getValues();
-    if (formData.clientName && formData.quantity && formData.pounds && formData.pricePerPound) {
-      const mockInvoice: Invoice = {
+    if (formData.clientName && formData.concept && formData.quantity && formData.pounds && formData.pricePerPound) {
+      const total = Number(formData.pounds) * Number(formData.pricePerPound);
+      const previewInvoice: Invoice = {
         id: 0,
-        invoiceNumber: 'PREV-0001',
-        ...formData,
-        total: (Number(formData.pounds) * Number(formData.pricePerPound)).toString(),
+        invoiceNumber: 'PREV-' + Date.now().toString().slice(-4),
+        clientName: formData.clientName,
+        clientPhone: formData.clientPhone || '',
+        concept: formData.concept,
+        quantity: Number(formData.quantity),
+        pounds: formData.pounds,
+        pricePerPound: formData.pricePerPound,
+        total: total.toString(),
+        status: formData.status || 'paid',
         date: new Date(),
       };
-      setPreviewInvoice(mockInvoice);
+      setPreviewInvoice(previewInvoice);
+    } else {
+      toast({
+        title: "Datos incompletos",
+        description: "Complete todos los campos requeridos para generar la vista previa",
+        variant: "destructive",
+      });
     }
   };
 

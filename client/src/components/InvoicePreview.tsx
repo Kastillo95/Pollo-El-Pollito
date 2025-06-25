@@ -15,7 +15,7 @@ export default function InvoicePreview({ invoice }: InvoicePreviewProps) {
     return (
       <Card>
         <CardContent className="p-6 text-center text-gray-500">
-          <p>Genere una factura para ver la vista previa</p>
+          <p>Complete los datos del formulario y haga clic en "Vista Previa" para ver la factura</p>
         </CardContent>
       </Card>
     );

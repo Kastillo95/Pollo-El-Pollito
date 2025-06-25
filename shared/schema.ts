@@ -64,7 +64,7 @@ export const mortalities = pgTable("mortalities", {
 // Insert schemas
 export const insertCoopSchema = createInsertSchema(coops).omit({
   id: true,
-});
+}).partial();
 
 export const insertPurchaseSchema = createInsertSchema(purchases).omit({
   id: true,
